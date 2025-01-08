@@ -1,9 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Admin from "./admin.router";
-import { useAuthStore } from "@/stores/authenticate-login";
+import userRouter from "./userRouter.js";
+// import { useAuthStore } from "@/stores/authenticate-login";
 import PageNotFound from "@/pages/404page_not_found/index.vue";
 const routes = [
-  ...Admin,
+  ...userRouter,
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
@@ -19,12 +19,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
+  // const authStore = useAuthStore();
   document.title = to.meta?.title ?? "No title page!!!";
-  if (to.path.startsWith("/admin") && !authStore.isLogged) {
-    next({ name: "admin.login" });
-  } else {
-    next();
-  }
+  next();
+  // if (to.path.startsWith("/admin") && !authStore.isLogged) {
+  //   next({ name: "admin.login" });
+  // } else {
+  //   next();
+  // }
 });
 export default router;
