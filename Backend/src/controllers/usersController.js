@@ -5,6 +5,7 @@ const getUsers = async (req, res) => {
   const users = await User.find();
   res.json(users);
 };
+s;
 
 const createUser = async (req, res) => {
   const { name, email, password } = req.body;
