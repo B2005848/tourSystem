@@ -13,5 +13,6 @@ const scheduleSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
-
+// Thêm index để đảm bảo `idUser`, `date`, và `time` là duy nhất
+scheduleSchema.index({ idUser: 1, date: 1, time: 1 }, { unique: true });
 module.exports = mongoose.model("Schedule", scheduleSchema);
