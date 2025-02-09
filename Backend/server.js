@@ -5,6 +5,8 @@ const mongoose = require("./src/db.config");
 const userRoutes = require("./src/routes/usersRoutes");
 const shipsRoutes = require("./src/routes/shipsRoutes");
 const depotShipsRoutes = require("./src/routes/depotShipsRoutes");
+const accountManagerRoutes = require("./src/routes/accountManagerRoutes");
+const scheduleRoutes = require("./src/routes/scheduleRoutes");
 const { errorHandler } = require("./src/middlewares/errorMiddleware");
 
 const app = express();
@@ -19,6 +21,12 @@ app.use("/api/ships", shipsRoutes);
 
 // Depot ships api
 app.use("/api/depotships", depotShipsRoutes);
+
+// Account manager api
+app.use("/api/accounts", accountManagerRoutes);
+
+// Schedule api
+app.use("/api/schedules", scheduleRoutes);
 
 app.use(errorHandler);
 

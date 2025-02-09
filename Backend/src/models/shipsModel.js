@@ -1,4 +1,4 @@
-// models/User.js
+// models/ships.js
 const mongoose = require("mongoose");
 
 const shipsSchema = new mongoose.Schema({
