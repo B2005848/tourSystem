@@ -3,7 +3,53 @@ const Schedule = require("../models/scheduleModel");
 // Get all schedules
 const getSchedules = async (req, res) => {
   try {
-    const schedules = await Schedule.find();
+    const schedules = await Schedule.aggregate([
+      {
+        $lookup: {
+          from: "users", // Collection name for users
+          localField: "idUser",
+          foreignField: "id",
+          as: "userDetails",
+        },
+      },
+      {
+        $addFields: { idShip: { $toObjectId: "$idShip" } },
+      },
+      {
+        $lookup: {
+          from: "ships", // Collection name for ships
+          localField: "idShip",
+          foreignField: "_id",
+          as: "shipDetails",
+        },
+      },
+      {
+        $unwind: "$userDetails",
+      },
+      {
+        $unwind: "$shipDetails",
+      },
+      {
+        $project: {
+          _id: 1,
+          idUser: 1,
+          idShip: 1,
+          date: 1,
+          to: 1,
+          from: 1,
+          time: 1,
+          status: 1,
+          comments: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          "userDetails.name": 1,
+          "userDetails.id": 1,
+          "shipDetails.name": 1,
+          "shipDetails.id": 1,
+        },
+      },
+    ]);
+
     res.json(schedules);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -14,7 +60,12 @@ const getSchedules = async (req, res) => {
 const createSchedule = async (req, res) => {
   try {
     const { idUser, idShip, date, to, from, time, status, comments } = req.body;
-
+    const existingSchedule = await Schedule.findOne({ idUser, date, time });
+    if (existingSchedule) {
+      return res.status(400).json({
+        message: "Schedule already exists for this user at the specified time",
+      });
+    }
     const schedule = new Schedule({
       idUser,
       idShip,
@@ -100,7 +151,7 @@ const countSchedulesByMonth = async (req, res) => {
           count: { $sum: 1 },
         },
       },
-      { $sort: { "_id.idUser": 1 } },
+      { $sort: { count: 1 } }, //sắp xếp theo thứ tự tăng dần
     ]);
 
     res.json(schedules);
