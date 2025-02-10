@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("./src/db.config");
+const cors = require("cors");
 const userRoutes = require("./src/routes/usersRoutes");
 const shipsRoutes = require("./src/routes/shipsRoutes");
 const depotShipsRoutes = require("./src/routes/depotShipsRoutes");
@@ -10,7 +11,7 @@ const scheduleRoutes = require("./src/routes/scheduleRoutes");
 const { errorHandler } = require("./src/middlewares/errorMiddleware");
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 // Thuyền viên api
