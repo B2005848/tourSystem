@@ -1,10 +1,35 @@
 // controllers/userController.js
 const User = require("../models/usersModel");
 
-// Lấy danh sách thuyền viên
+// Lấy danh sách thuyền viên với phân trang
 const getUsers = async (req, res) => {
-  const users = await User.find();
-  res.json(users);
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    // Lấy danh sách người dùng từ MongoDB
+    const users = await User.find()
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    // Sắp xếp danh sách users theo id theo thứ tự số
+    users.sort((a, b) => {
+      // Chuyển 'P' thành số, loại bỏ ký tự 'P' và so sánh
+      const numA = parseInt(a.id.replace("P", ""), 10);
+      const numB = parseInt(b.id.replace("P", ""), 10);
+      return numA - numB;
+    });
+
+    const totalUsers = await User.countDocuments();
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    res.json({
+      users,
+      totalPages,
+      currentPage: Number(page),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 // Tạo thuyền viên mới
