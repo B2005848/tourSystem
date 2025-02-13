@@ -1,54 +1,17 @@
 const Schedule = require("../models/scheduleModel");
 
-// Get all schedules
-const getSchedules = async (req, res) => {
+// Get schedules by date
+// Get schedules by date
+const getSchedulesByDate = async (req, res) => {
   try {
-    const schedules = await Schedule.aggregate([
-      {
-        $lookup: {
-          from: "users", // Collection name for users
-          localField: "idUser",
-          foreignField: "id",
-          as: "userDetails",
-        },
-      },
-      {
-        $addFields: { idShip: { $toObjectId: "$idShip" } },
-      },
-      {
-        $lookup: {
-          from: "ships", // Collection name for ships
-          localField: "idShip",
-          foreignField: "_id",
-          as: "shipDetails",
-        },
-      },
-      {
-        $unwind: "$userDetails",
-      },
-      {
-        $unwind: "$shipDetails",
-      },
-      {
-        $project: {
-          _id: 1,
-          idUser: 1,
-          idShip: 1,
-          date: 1,
-          to: 1,
-          from: 1,
-          time: 1,
-          status: 1,
-          comments: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          "userDetails.name": 1,
-          "userDetails.id": 1,
-          "shipDetails.name": 1,
-          "shipDetails.id": 1,
-        },
-      },
-    ]);
+    const { date } = req.params; // Lấy ngày từ URL
+
+    if (!date) {
+      return res.status(400).json({ message: "Date is required" });
+    }
+
+    // Tìm tất cả lịch trình theo ngày đã cho
+    const schedules = await Schedule.find({ date });
 
     res.json(schedules);
   } catch (error) {
@@ -59,7 +22,16 @@ const getSchedules = async (req, res) => {
 // Create a new schedule
 const createSchedule = async (req, res) => {
   try {
-    const { idUser, idShip, date, to, from, time, status, comments } = req.body;
+    const {
+      idUser,
+      idShip,
+      date,
+      to,
+      from,
+      time,
+      status = 1,
+      comments,
+    } = req.body;
     const existingSchedule = await Schedule.findOne({ idUser, date, time });
     if (existingSchedule) {
       return res.status(400).json({
@@ -161,7 +133,7 @@ const countSchedulesByMonth = async (req, res) => {
 };
 
 module.exports = {
-  getSchedules,
+  getSchedulesByDate,
   createSchedule,
   updateSchedule,
   deleteSchedule,

@@ -8,7 +8,7 @@ const scheduleSchema = new mongoose.Schema({
   to: { type: String, required: true },
   from: { type: String, required: true },
   time: { type: String, required: true },
-  status: { type: String, required: true },
+  status: { type: Number, required: true },
   comments: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
