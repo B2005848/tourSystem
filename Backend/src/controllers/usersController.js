@@ -1,5 +1,6 @@
 // controllers/userController.js
 const User = require("../models/usersModel");
+const ExcelJS = require("exceljs");
 
 // Lấy danh sách thuyền viên với phân trang
 const getUsers = async (req, res) => {
@@ -126,4 +127,63 @@ const searchUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, createUser, updateUser, deleteUser, searchUser };
+// Export users to Excel
+const exportUsersToExcel = async (req, res) => {
+  try {
+    const users = await User.find();
+    users.sort((a, b) => {
+      // Chuyển 'P' thành số, loại bỏ ký tự 'P' và so sánh
+      const numA = parseInt(a.id.replace("P", ""), 10);
+      const numB = parseInt(b.id.replace("P", ""), 10);
+      return numA - numB;
+    });
+    // Create a new workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("DS_HoaTieu");
+
+    // Add columns to the worksheet
+
+    worksheet.columns = [
+      { header: "STT", key: "no", width: 5 },
+      { header: "MÃ HOA TIÊU", key: "id", width: 10 },
+      { header: "HỌ VÀ TÊN", key: "name", width: 30 },
+      { header: "NGÀY SINH", key: "birthday", width: 15 },
+      { header: "SĐT", key: "phone", width: 15 },
+      { header: "VỊ TRÍ", key: "visitting", width: 15 },
+    ];
+
+    // Add rows to the worksheet
+    users.forEach((user, index) => {
+      worksheet.addRow({
+        no: index + 1,
+        id: user.id,
+        name: user.name,
+        birthday: user.birthday,
+        phone: user.phone,
+        visitting: user.visitting,
+      });
+    });
+
+    // Write to buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    // Set the response headers and send the buffer
+    res.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.send(buffer);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  searchUser,
+  exportUsersToExcel,
+};

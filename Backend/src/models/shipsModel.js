@@ -8,11 +8,15 @@ const shipsSchema = new mongoose.Schema({
     unique: true,
     set: (v) => v.toUpperCase(),
   },
-  nation: { type: String },
+  nation: { type: String, set: (v) => v.toUpperCase() },
+
   length: { type: Number },
   draft: { type: Number },
   gt: { type: Number },
-  visitting: { type: String },
+  owner: { type: String, set: (v) => v.toUpperCase() },
+  visitting: { type: String, set: (v) => v.toUpperCase() },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Ships", shipsSchema);

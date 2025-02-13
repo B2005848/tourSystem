@@ -4,7 +4,7 @@
   >
     <div class="flex justify-between items-center mb-4">
       <div class="flex">
-        <h1 class="text-2xl font-bold mb-4">DANH SÁCH HOA TIÊU</h1>
+        <h1 class="text-2xl font-bold mb-4">DANH SÁCH TÀU/THUYỀN</h1>
         <span flex justify-between items-center>
           <button
             title="Làm mới"
@@ -36,7 +36,7 @@
           type="text"
           size="30"
           class="px-4 py-2 border border-gray-200 rounded"
-          placeholder="Nhập thông tin hoa tiêu cần tìm..."
+          placeholder="Nhập thông tin tàu cần tìm..."
         />
         <button
           @click="search"
@@ -65,74 +65,66 @@
       <thead>
         <tr>
           <th class="py-2 px-4 border-b">STT</th>
-          <th class="py-2 px-4 border-b">MÃ HOA TIÊU</th>
-          <th class="py-2 px-4 border-b">HỌ VÀ TÊN</th>
-          <th class="py-2 px-4 border-b">NGÀY SINH</th>
-          <th class="py-2 px-4 border-b">SỐ ĐIỆN THOẠI</th>
-          <th class="py-2 px-4 border-b">TRẠNG THÁI</th>
+          <th class="py-2 px-4 border-b">TÊN TÀU</th>
+          <th class="py-2 px-4 border-b">QUÓC TỊCH</th>
+          <th class="py-2 px-4 border-b">CHIỀU DÀI</th>
+          <th class="py-2 px-4 border-b">MỚN NƯỚC</th>
+          <th class="py-2 px-4 border-b">GT</th>
+          <th class="py-2 px-4 border-b">ĐẠI LÝ</th>
+          <th class="py-2 px-4 border-b">CẬP NHẬT</th>
           <th class="py-2 px-4 border-b">VỊ TRÍ HIỆN TẠI</th>
           <th class="py-2 px-4 border-b">CÔNG CỤ</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(user, index) in users" :key="user._id">
+        <tr v-for="(ship, index) in ships" :key="ship._id">
           <!-- STT -->
           <td class="py-2 px-4 border-b text-center">
             {{ (currentPage - 1) * 10 + index + 1 }}
           </td>
 
-          <!-- MÃ HOA TIÊU -->
-          <td class="py-2 px-4 border-b text-center">{{ user.id }}</td>
+          <!-- TÊN TÀU  -->
+          <td class="py-2 px-4 border-b text-center">{{ ship.name }}</td>
 
-          <!-- HỌ VÀ TÊN -->
-          <td class="py-2 px-4 border-b text-center">{{ user.name }}</td>
+          <!-- QUÓC TỊCH -->
+          <td class="py-2 px-4 border-b text-center">{{ ship.nation }}</td>
 
-          <!-- NGÀY SINH -->
-          <td class="py-2 px-4 border-b text-center">{{ user.birthday }}</td>
+          <!-- CHIỀU DÀI -->
+          <td class="py-2 px-4 border-b text-center">{{ ship.length }}</td>
 
-          <!-- SỐ ĐIỆN THOẠI -->
-          <td class="py-2 px-4 border-b text-center" v-if="user.phone">
-            {{ user.phone }}
-          </td>
-          <td
-            class="py-2 px-4 border-b text-center text-red-600"
-            v-if="!user.phone"
-          >
-            Chưa cập nhật
-          </td>
+          <!-- MỚN NƯỚC -->
+          <td class="py-2 px-4 border-b text-center">{{ ship.draft }}</td>
 
-          <!-- TRẠNG THÁI -->
-          <td
-            class="py-2 px-4 border-b text-center text-green-500"
-            v-if="user.status == 1"
-          >
-            Đang hoạt động
-          </td>
+          <!-- GT -->
+          <td class="py-2 px-4 border-b text-center">{{ ship.gt }}</td>
 
-          <td
-            class="py-2 px-4 border-b text-center text-blue-400"
-            v-if="user.status == 0"
-          >
-            Đang nghỉ phép
-          </td>
+          <!-- ĐẠI LÝ -->
+          <td class="py-2 px-4 border-b text-center">{{ ship.owner }}</td>
 
           <!-- VỊ TRÍ HIỆN TẠI -->
-          <td class="py-2 px-4 border-b text-center" v-if="user.visitting">
-            {{ user.visitting }}
+          <td class="py-2 px-4 border-b text-center" v-if="ship.visitting">
+            {{ ship.visitting }}
           </td>
+
+          <!-- NGÀY CẬP NHẬT -->
+          <td class="py-2 px-4 border-b text-center">
+            {{ formatDate.formatDateTime(ship.updated_at) }}
+          </td>
+
           <td
-            class="py-2 px-4 border-b text-center text-red-600"
-            v-if="!user.visitting"
+            class="py-2 px-4 border-b text-center text-yellow-600"
+            v-if="!ship.visitting"
           >
             Chưa cập nhật
           </td>
+
           <!-- CÔNG CỤ -->
           <td class="py-2 px-4 border-b text-center">
             <select class="px-2 py-1 border border-gray-300 rounded">
-              <option value="">Chọn hành động</option>
+              <option>Chọn hành động</option>
               <option value="edit">Sửa thông tin</option>
-              <option value="register">Đăng kí lịch trình</option>
-              <option value="delete">Xóa</option>
+              <option value="view">Cập nhật vị trí tàu</option>
+              <option value="delete" class="text-red-600">Xóa</option>
             </select>
           </td>
         </tr>
@@ -162,59 +154,90 @@
       class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center"
     >
       <div class="bg-white p-4 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Tạo hoa tiêu mới</h2>
+        <h2 class="text-2xl font-bold mb-4">THÊM TÀU MỚI</h2>
         <form class="w-96" @submit.prevent="hanldeCreate">
           <div class="mb-4">
-            <label for="id" class="block text-sm font-medium text-gray-700">
-              Mã hoa tiêu (ID) <sup class="text-red-500">*</sup>
-            </label>
-            <input
-              type="text"
-              id="id"
-              name="id"
-              v-model="userForm.id"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-
             <label
               for="name"
               class="block text-sm font-medium text-gray-700 mt-4"
             >
-              Họ và tên <sup class="text-red-500">*</sup>
+              TÊN TÀU<sup class="text-red-500">*</sup>
             </label>
             <input
               type="text"
               id="name"
               name="name"
-              v-model="userForm.name"
+              v-model="shipForm.name"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
             <label
-              for="birthday"
+              for="nation"
               class="block text-sm font-medium text-gray-700 mt-4"
             >
-              Ngày sinh
-            </label>
-            <input
-              type="date"
-              id="birthday"
-              name="birthday"
-              v-model="userForm.birthday"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-
-            <label
-              for="phone"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
-              Số điện thoại
+              QUÓC TỊCH
             </label>
             <input
               type="text"
-              id="phone"
-              name="phone"
-              v-model="userForm.phone"
+              id="nation"
+              name="nation"
+              v-model="shipForm.nation"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+
+            <label
+              for="length"
+              class="block text-sm font-medium text-gray-700 mt-4"
+            >
+              CHIỀU DÀI
+            </label>
+            <input
+              type="text"
+              id="length"
+              name="length"
+              v-model="shipForm.length"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+
+            <label
+              for="draft"
+              class="block text-sm font-medium text-gray-700 mt-4"
+            >
+              MỚN NƯỚC
+            </label>
+            <input
+              type="text"
+              id="draft"
+              name="draft"
+              v-model="shipForm.draft"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+
+            <label
+              for="gt"
+              class="block text-sm font-medium text-gray-700 mt-4"
+            >
+              GT
+            </label>
+            <input
+              type="text"
+              id="gt"
+              name="gt"
+              v-model="shipForm.gt"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+
+            <label
+              for="owner"
+              class="block text-sm font-medium text-gray-700 mt-4"
+            >
+              ĐẠI LÝ
+            </label>
+            <input
+              type="text"
+              id="owner"
+              name="owner"
+              v-model="shipForm.owner"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
@@ -244,78 +267,76 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import formatDate from "@/helper/format-datetime";
 
-const users = ref([]);
+const ships = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 
-const fetchUsers = async (page = 1) => {
+const fetchships = async (page = 1) => {
   try {
-    const response = await axios.get("http://localhost:3000/api/users", {
+    const response = await axios.get("http://localhost:3000/api/ships", {
       params: { page, limit: 10 },
     });
-    users.value = response.data.users;
+    ships.value = response.data.ships;
     currentPage.value = response.data.currentPage;
     totalPages.value = response.data.totalPages;
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching ships:", error);
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
-    fetchUsers(currentPage.value - 1);
+    fetchships(currentPage.value - 1);
   }
 };
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
-    fetchUsers(currentPage.value + 1);
+    fetchships(currentPage.value + 1);
   }
 };
 const refeshed = ref(true);
 const handleRefesh = () => {
   refeshed.value = false;
-  fetchUsers();
+  fetchships();
   setTimeout(() => {
     refeshed.value = true;
   }, 1000);
 };
 
 // form tạo mới hoa tiêu
-const userForm = ref({
-  id: "",
+const shipForm = ref({
   name: "",
-  birthday: "",
-  phone: "",
-  status: 1,
-  visitting: "",
+  nation: "",
+  length: "",
+  draft: "",
+  gt: "",
+  owner: "",
 });
 const showCreateForm = ref(false);
 const hanldeCreate = async () => {
-  console.log(userForm.value);
+  console.log(shipForm.value);
   try {
-    if (!userForm.value.id) {
-      Swal.fire("Error", "Vui lòng nhập mã hoa tiêu", "error");
-      if (!userForm.value.name) {
-        Swal.fire("Error", "Vui lòng nhập họ và tên", "error");
-        return;
-      }
+    if (!shipForm.value.name) {
+      Swal.fire("Error", "Tên tàu không được để trống", "error");
+      return;
     }
     const response = await axios.post(
-      "http://localhost:3000/api/users",
-      userForm.value
+      "http://localhost:3000/api/ships",
+      shipForm.value
     );
     if (response.status === 201) {
-      Swal.fire("Success", "Tạo mới hoa tiêu thành công", "success");
+      Swal.fire("Thành công", "Thêm tàu mới thành công", "success");
     }
     showCreateForm.value = false;
-    fetchUsers();
+    fetchships();
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error creating ship:", error);
     Swal.fire(
       "Error",
-      "Có lỗi trong quá trình thêm hoa tiêu mới, liên hệ quản trị viên để được xử lí",
+      "Có lỗi trong quá trình thêm tàu mới, liên hệ quản trị viên để được xử lí",
       "error"
     );
   }
@@ -327,13 +348,13 @@ const search = async () => {
   console.log("searching...");
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/users/search?query=${searchID.value}`
+      `http://localhost:3000/api/ships/search?query=${searchID.value}`
     );
     console.log(response.data);
 
-    users.value = response.data;
+    ships.value = response.data;
   } catch (error) {
-    console.error("Error searching users:", error);
+    console.error("Error searching ships:", error);
   }
 };
 
@@ -349,7 +370,7 @@ const exportToExcel = async () => {
     if (result.isConfirmed) {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/users/export",
+          "http://localhost:3000/api/ships/export",
           {
             responseType: "blob",
           }
@@ -357,18 +378,18 @@ const exportToExcel = async () => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "DS Hoa Tieu.xlsx");
+        link.setAttribute("download", "DS TÀU.xlsx");
         document.body.appendChild(link);
         link.click();
       } catch (error) {
-        console.error("Error exporting users to Excel:", error);
+        console.error("Error exporting ships to Excel:", error);
       }
     }
   });
 };
 
 onMounted(() => {
-  fetchUsers();
+  fetchships();
 });
 </script>
 

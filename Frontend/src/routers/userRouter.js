@@ -47,6 +47,16 @@ const userRouter = [
           title: "TOURS SYSTEM - QUẢN LÍ HOA TIÊU",
         },
       },
+
+      // TRANG QUẢN LÍ TÀU THUYỀN
+      {
+        path: "ships_management",
+        name: "ships.mng",
+        component: () => import("../pages/shipManagement/index.vue"),
+        meta: {
+          title: "TOURS SYSTEM - QUẢN LÍ TÀU THUYỀN",
+        },
+      },
     ],
   },
 ];
