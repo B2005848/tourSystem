@@ -43,6 +43,9 @@ const createUser = async (req, res) => {
       .status(400)
       .json({ message: "User with this ID already exists" });
   }
+  if (id === undefined || name === undefined) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
 
   const user = new User({ id, name, birthday, phone, visitting, status });
   await user.save();
