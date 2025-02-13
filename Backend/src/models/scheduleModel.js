@@ -3,7 +3,11 @@ const mongoose = require("mongoose");
 
 const scheduleSchema = new mongoose.Schema({
   idUser: { type: String, required: true },
-  idShip: { type: String, required: true },
+  idShip: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Ships",
+  },
   date: { type: Date, required: true },
   to: { type: String, required: true },
   from: { type: String, required: true },

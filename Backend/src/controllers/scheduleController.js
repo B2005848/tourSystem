@@ -1,19 +1,62 @@
 const Schedule = require("../models/scheduleModel");
 
-// Get schedules by date
-// Get schedules by date
+// Get schedules by date with pagination
 const getSchedulesByDate = async (req, res) => {
   try {
-    const { date } = req.params; // Lấy ngày từ URL
+    const { year, month, day } = req.params; // Lấy năm, tháng, ngày từ URL
+    let { page = 1, limit = 10 } = req.query; // Nhận tham số page & limit từ query string
 
-    if (!date) {
-      return res.status(400).json({ message: "Date is required" });
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    if (!year || !month || !day) {
+      return res
+        .status(400)
+        .json({ message: "Year, month, and day are required" });
     }
 
-    // Tìm tất cả lịch trình theo ngày đã cho
-    const schedules = await Schedule.find({ date });
+    // Tạo một đối tượng ngày từ các tham số year, month, day
+    const date = new Date(year, month - 1, day); // month - 1 vì tháng trong JavaScript bắt đầu từ 0
 
-    res.json(schedules);
+    if (isNaN(date)) {
+      return res.status(400).json({ message: "Invalid date format" });
+    }
+
+    // Tính số lượng bỏ qua
+    const skip = (page - 1) * limit;
+
+    // Tính ngày bắt đầu và kết thúc
+    const startOfDay = new Date(date.setHours(0, 0, 0, 0)); // Lấy thời gian bắt đầu ngày
+    const endOfDay = new Date(date.setHours(23, 59, 59, 999)); // Lấy thời gian kết thúc ngày
+
+    // Tìm lịch trình theo ngày với phân trang
+    const schedules = await Schedule.find({
+      date: {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      },
+    })
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "idShip",
+        select: "name",
+      });
+
+    // Đếm tổng số lịch trình theo ngày để trả về tổng số trang
+    const totalSchedules = await Schedule.countDocuments({
+      date: {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      },
+    });
+
+    res.json({
+      page,
+      totalPages: Math.ceil(totalSchedules / limit),
+      totalSchedules,
+      schedules,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

@@ -9,7 +9,7 @@ const {
 const router = express.Router();
 
 // Route lấy lịch trình theo ngày
-router.get("/getschedules/:date", getSchedulesByDate);
+router.get("/getbydate/:year/:month/:day", getSchedulesByDate);
 
 router.route("/").post(createSchedule);
 router.route("/:id").put(updateSchedule).delete(deleteSchedule);
