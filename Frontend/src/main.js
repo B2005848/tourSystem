@@ -1,4 +1,7 @@
 import { createApp } from "vue";
+import "flowbite";
+import "flowbite-vue";
+
 import App from "./App.vue";
 import { createPinia } from "pinia";
 import router from "./routers/index";

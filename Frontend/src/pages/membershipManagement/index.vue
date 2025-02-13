@@ -61,28 +61,40 @@
         </button>
       </div>
     </div>
-    <table class="min-w-full bg-white">
-      <thead>
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      >
         <tr>
-          <th class="py-2 px-4 border-b">STT</th>
-          <th class="py-2 px-4 border-b">MÃ HOA TIÊU</th>
-          <th class="py-2 px-4 border-b">HỌ VÀ TÊN</th>
-          <th class="py-2 px-4 border-b">NGÀY SINH</th>
-          <th class="py-2 px-4 border-b">SỐ ĐIỆN THOẠI</th>
-          <th class="py-2 px-4 border-b">TRẠNG THÁI</th>
-          <th class="py-2 px-4 border-b">VỊ TRÍ HIỆN TẠI</th>
-          <th class="py-2 px-4 border-b">CÔNG CỤ</th>
+          <th scope="col" class="px-6 py-3 text-center">STT</th>
+          <th scope="col" class="px-6 py-3 text-center">MÃ HOA TIÊU</th>
+          <th scope="col" class="px-6 py-3 text-center">HỌ VÀ TÊN</th>
+          <th scope="col" class="px-6 py-3 text-center">NGÀY SINH</th>
+          <th scope="col" class="px-6 py-3 text-center">SỐ ĐIỆN THOẠI</th>
+          <th scope="col" class="px-6 py-3 text-center">TRẠNG THÁI</th>
+          <th scope="col" class="px-6 py-3 text-center">VỊ TRÍ HIỆN TẠI</th>
+          <th scope="col" class="px-6 py-3 text-center">CÔNG CỤ</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(user, index) in users" :key="user._id">
+        <tr
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+          v-for="(user, index) in users"
+          :key="user._id"
+        >
           <!-- STT -->
           <td class="py-2 px-4 border-b text-center">
             {{ (currentPage - 1) * 10 + index + 1 }}
           </td>
 
           <!-- MÃ HOA TIÊU -->
-          <td class="py-2 px-4 border-b text-center">{{ user.id }}</td>
+          <th
+            class="text-center px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            {{ user.id }}
+          </th>
 
           <!-- HỌ VÀ TÊN -->
           <td class="py-2 px-4 border-b text-center">{{ user.name }}</td>
