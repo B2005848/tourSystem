@@ -193,7 +193,7 @@ const exportSchedulesByDate = async (req, res) => {
     const schedules = await Schedule.find({
       date: { $gte: startOfDay, $lt: endOfDay },
     })
-      .populate("idUser", "name")
+      .populate("idUser", "name id")
       .populate("idShip", "name");
 
     if (!schedules.length) {
@@ -224,6 +224,7 @@ const exportSchedulesByDate = async (req, res) => {
     schedules.forEach((schedule, index) => {
       worksheet.addRow({
         index: index + 1,
+        userId: schedule.idUser ? schedule.idUser.id : "Không xác định",
         userName: schedule.idUser ? schedule.idUser.name : "Không xác định",
         shipName: schedule.idShip ? schedule.idShip.name : "Không xác định",
         date: new Date(schedule.date).toLocaleDateString("vi-VN"),
@@ -266,7 +267,7 @@ const exportSchedulesByMonth = async (req, res) => {
     const schedules = await Schedule.find({
       date: { $gte: startOfMonth, $lt: endOfMonth },
     })
-      .populate("idUser", "name") // Lấy tên người dùng
+      .populate("idUser", "name id") // Lấy tên người dùng
       .populate("idShip", "name"); // Lấy tên tàu
 
     if (schedules.length === 0) {
@@ -298,7 +299,7 @@ const exportSchedulesByMonth = async (req, res) => {
     schedules.forEach((schedule, index) => {
       worksheet.addRow({
         index: index + 1,
-        userId: schedule.idUser.id,
+        userId: schedule.idUser ? schedule.idUser.id : "Không xác định",
         userName: schedule.idUser ? schedule.idUser.name : "Không xác định",
         shipName: schedule.idShip ? schedule.idShip.name : "Không xác định",
         date: schedule.date.toISOString().split("T")[0], // Định dạng ngày

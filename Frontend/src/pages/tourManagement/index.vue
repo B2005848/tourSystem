@@ -152,7 +152,7 @@
             </h2></span
           >
           <span class="ms-3">
-            <button>
+            <button @click="showForm = false">
               <font-awesome-icon
                 icon="fa-regular fa-circle-xmark"
                 style="color: #d62e2e"
@@ -184,7 +184,9 @@
             </router-link>
           </div>
         </div>
-        <router-view></router-view>
+        <div class="mt-5">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -244,36 +246,6 @@ const handleRefesh = () => {
 
 // Form lựa chọn cách xuất file excel
 const showForm = ref(false);
-
-const exportToExcel = async () => {
-  Swal.fire({
-    title: "Xuất ra file Excel",
-    text: "Bạn có chắc chắn muốn xuất ra file Excel không?",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Xuất ra",
-    cancelButtonText: "Hủy",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/api/schedule/export",
-          {
-            responseType: "blob",
-          }
-        );
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "DS TÀU.xlsx");
-        document.body.appendChild(link);
-        link.click();
-      } catch (error) {
-        console.error("Error exporting schedule to Excel:", error);
-      }
-    }
-  });
-};
 
 onMounted(() => {
   fetchschedule();
