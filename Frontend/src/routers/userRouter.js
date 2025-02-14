@@ -89,6 +89,16 @@ const userRouter = [
           title: "TOURS SYSTEM - QUẢN LÍ TÀU THUYỀN",
         },
       },
+
+      // TRANG QUẢN LÍ CẦU BẾN
+      {
+        path: "ports_management",
+        name: "ports.mng",
+        component: () => import("../pages/portManagement/index.vue"),
+        meta: {
+          title: "TOURS SYSTEM - QUẢN LÍ CẦU BẾN",
+        },
+      },
     ],
   },
 ];

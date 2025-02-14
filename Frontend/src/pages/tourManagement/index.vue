@@ -263,16 +263,14 @@
       class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center"
     >
       <div class="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold text-center mb-6">
-          Tạo Lịch Trình Mới
-        </h2>
+        <h2 class="text-2xl font-semibold text-center mb-6">THÊM TUA MỚI</h2>
 
         <form @submit.prevent="handleCreate">
           <!-- Ngày và Giờ -->
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label for="date" class="block text-sm font-medium text-gray-700"
-                >Chọn ngày khởi hành</label
+                >CHỌN NGÀY KHỞI HÀNH</label
               >
               <input
                 v-model="scheduleCreate.date"
@@ -286,7 +284,7 @@
             </div>
             <div class="relative">
               <label for="time" class="block text-sm font-medium text-gray-700"
-                >Chọn giờ khởi hành</label
+                >CHỌN GIỜ KHỞI HÀNH</label
               >
               <div
                 class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
@@ -324,8 +322,12 @@
               <label
                 for="idUser"
                 class="block text-sm font-medium text-gray-700"
-                >Chọn Hoa Tiêu</label
-              >
+                >CHỌN HOA TIÊU
+                <font-awesome-icon
+                  icon="fa-solid fa-person-military-pointing"
+                  size="sm"
+                  style="color: #74c0fc"
+              /></label>
               <select
                 @click="getallusers"
                 v-model="scheduleCreate.idUser"
@@ -342,8 +344,12 @@
               <label
                 for="idShip"
                 class="block text-sm font-medium text-gray-700"
-                >CHỌN TÀU</label
-              >
+                >CHỌN TÀU
+                <font-awesome-icon
+                  icon="fa-solid fa-ship"
+                  size="sm"
+                  style="color: #74c0fc"
+              /></label>
               <select
                 @click="getallships"
                 v-model="scheduleCreate.idShip"
@@ -362,8 +368,12 @@
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label for="from" class="block text-sm font-medium text-gray-700"
-                >ĐIỂM ĐI</label
-              >
+                >ĐIỂM ĐI
+                <font-awesome-icon
+                  icon="fa-solid fa-anchor"
+                  size="sm"
+                  style="color: #74c0fc"
+              /></label>
               <select
                 @click="getallport"
                 v-model="scheduleCreate.from"
@@ -378,15 +388,19 @@
             </div>
             <div>
               <label for="to" class="block text-sm font-medium text-gray-700"
-                >ĐIỂM ĐẾN</label
-              >
+                >ĐIỂM ĐẾN
+                <font-awesome-icon
+                  icon="fa-solid fa-anchor"
+                  size="sm"
+                  style="color: #74c0fc"
+              /></label>
               <select
                 @click="getallport"
                 v-model="scheduleCreate.to"
                 class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 required
               >
-                <option value="" disabled>Chọn điểm xuất phát</option>
+                <option value="" disabled>Chọn điểm đến</option>
                 <option v-for="port in ports" :key="port._id" :value="port.id">
                   {{ port.id }} - {{ port.name }}
                 </option>

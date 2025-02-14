@@ -10,6 +10,23 @@ const getDepotShips = async (req, res) => {
   }
 };
 
+const getDepot = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const ports = await DepotShips.find()
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+    const totalShips = await DepotShips.countDocuments();
+    const totalPages = Math.ceil(totalShips / limit);
+    res.json({
+      ports,
+      totalPages,
+      currentPage: Number(page),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 // Create a new depot ship
 const createDepotShip = async (req, res) => {
   try {
@@ -75,6 +92,7 @@ const deleteDepotShip = async (req, res) => {
 };
 
 module.exports = {
+  getDepot,
   getDepotShips,
   createDepotShip,
   updateDepotShip,

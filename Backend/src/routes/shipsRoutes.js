@@ -8,6 +8,7 @@ const {
   searchShip,
   exportShips,
 } = require("../controllers/shipsController");
+
 const router = express.Router();
 router.route("/getall").get(getAllShips);
 router.route("/").get(getShips).post(createShip);
