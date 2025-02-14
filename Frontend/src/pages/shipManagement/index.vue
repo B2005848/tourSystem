@@ -132,12 +132,14 @@
 
           <!-- CÔNG CỤ -->
           <td class="py-2 px-4 border-b text-center">
-            <select class="px-2 py-1 border border-gray-300 rounded">
-              <option>Chọn hành động</option>
-              <option>Sửa thông tin</option>
-              <option>Cập nhật vị trí tàu</option>
-              <option class="text-red-600">Xóa</option>
-            </select>
+            <div class="flex justify-center">
+              <button
+                @click="handleDelete(ship._id)"
+                class="text-red-600 underline"
+              >
+                Xóa
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -187,7 +189,7 @@
               for="nation"
               class="block text-sm font-medium text-gray-700 mt-4"
             >
-              QUÓC TỊCH
+              QUỐC TỊCH
             </label>
             <input
               type="text"
@@ -393,6 +395,35 @@ const exportToExcel = async () => {
         link.setAttribute("download", "DS TÀU.xlsx");
         document.body.appendChild(link);
         link.click();
+      } catch (error) {
+        console.error("Error exporting ships to Excel:", error);
+      }
+    }
+  });
+};
+
+const handleDelete = async (idShip) => {
+  Swal.fire({
+    title: "Xóa tàu thuyền",
+    text: "Bạn có chắc chắn muốn xóa tàu này không?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "XÓA",
+    cancelButtonText: "HỦY",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/ships/${idShip}`
+        );
+        if (response.status === 200) {
+          Swal.fire({
+            title: "THÀNH CÔNG",
+            text: "Đã xóa thành công!",
+            icon: "success",
+          });
+          fetchships(1);
+        }
       } catch (error) {
         console.error("Error exporting ships to Excel:", error);
       }

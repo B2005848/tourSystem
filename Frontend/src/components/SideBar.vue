@@ -25,7 +25,21 @@
         <!-- Quản lí tours -->
         <li>
           <router-link
-            :to="{ name: 'tours.mng' }"
+            :to="{ name: 'toursnowday.mng' }"
+            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+          >
+            <font-awesome-icon
+              :icon="['fas', 'arrow-right']"
+              size="lg"
+              style="color: #6b7280"
+            />
+            <span class="ms-3">LỊCH TRÌNH HÔM NAY</span>
+          </router-link>
+        </li>
+
+        <li>
+          <router-link
+            :to="{ name: 'toursmonth.mng' }"
             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
           >
             <font-awesome-icon
@@ -33,7 +47,7 @@
               size="lg"
               style="color: #6b7280"
             />
-            <span class="ms-3">QUẢN LÍ TOURS</span>
+            <span class="ms-3">LỊCH TRÌNH THÁNG</span>
           </router-link>
         </li>
 

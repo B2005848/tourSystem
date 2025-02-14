@@ -30,11 +30,11 @@ const userRouter = [
 
       // TRANG QUẢN LÍ TOURS
       {
-        path: "tours_management",
-        name: "tours.mng",
+        path: "tours_today_management",
+        name: "toursnowday.mng",
         component: () => import("../pages/tourManagement/index.vue"),
         meta: {
-          title: "TOURS SYSTEM - QUẢN LÍ TOURS",
+          title: "TOURS SYSTEM - LỊCH TRÌNH HÔM NAY",
         },
         children: [
           {
@@ -51,6 +51,15 @@ const userRouter = [
               import("../pages/tourManagement/exportExcelByMonth.vue"),
           },
         ],
+      },
+
+      {
+        path: "tours_month_management",
+        name: "toursmonth.mng",
+        component: () => import("../pages/tourMonth/index.vue"),
+        meta: {
+          title: "TOURS SYSTEM - LỊCH TRÌNH THÁNG",
+        },
       },
 
       // TRANG QUẢN LÍ HOA TIÊU

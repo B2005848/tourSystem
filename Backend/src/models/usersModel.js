@@ -2,7 +2,12 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
+  id: {
+    type: String,
+    required: true,
+    unique: true,
+    set: (v) => v.toUpperCase(),
+  },
   name: { type: String, required: true, set: (v) => v.toUpperCase() },
   birthday: { type: String },
   phone: { type: String },

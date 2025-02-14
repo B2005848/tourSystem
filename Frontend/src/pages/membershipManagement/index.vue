@@ -100,7 +100,16 @@
           <td class="py-2 px-4 border-b text-center">{{ user.name }}</td>
 
           <!-- NGÀY SINH -->
-          <td class="py-2 px-4 border-b text-center">{{ user.birthday }}</td>
+          <td class="py-2 px-4 border-b text-center" v-if="user.birthday">
+            {{ user.birthday }}
+          </td>
+
+          <td
+            class="py-2 px-4 border-b text-center text-red-600"
+            v-if="!user.birthday"
+          >
+            Chưa cập nhật
+          </td>
 
           <!-- SỐ ĐIỆN THOẠI -->
           <td class="py-2 px-4 border-b text-center" v-if="user.phone">

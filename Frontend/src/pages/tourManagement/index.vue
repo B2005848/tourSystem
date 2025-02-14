@@ -55,6 +55,38 @@
         </button>
       </div>
     </div>
+    <div class="mb-3">
+      Chú thích công cụ:
+      <ul>
+        <li>
+          <font-awesome-icon
+            icon="fa-solid fa-calendar-check"
+            size="lg"
+            style="color: #63e6be"
+          />
+          : Xác nhận lịch trình đã hoàn thành
+        </li>
+
+        <li>
+          <font-awesome-icon
+            icon="fa-regular fa-pen-to-square"
+            size="lg"
+            style="color: #74c0fc"
+          />
+          : Cập nhật lịch trình khi có sai sót
+        </li>
+
+        <li>
+          <font-awesome-icon
+            icon="fa-regular fa-trash-can"
+            size="lg"
+            style="color: #d21919"
+          />
+          : Xóa lịch trình
+        </li>
+      </ul>
+    </div>
+
     <table
       class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
     >
@@ -72,7 +104,7 @@
           <th class="py-2 px-4 border-b text-center">GHI CHÚ</th>
           <th class="py-2 px-4 border-b text-center">CẬP NHẬT LẦN CUỐI</th>
           <th class="py-2 px-4 border-b text-center">TRẠNG THÁI</th>
-          <th class="py-2 px-4 border-b text-center">THÊM LỊCH TRÌNH</th>
+          <th class="py-2 px-4 border-b text-center">CÔNG CỤ</th>
         </tr>
       </thead>
       <tbody>
@@ -116,7 +148,36 @@
             </span>
           </td>
           <!-- CÔNG CỤ -->
-          <td class="px-6 py-4 text-center">TẠO</td>
+          <td class="px-6 py-4 text-center">
+            <div class="flex justify-between">
+              <button
+                @click="handleCompleted(schedule._id)"
+                class="me-5"
+                title="Xác nhận hoàn thành"
+              >
+                <font-awesome-icon
+                  icon="fa-solid fa-calendar-check"
+                  size="lg"
+                  style="color: #63e6be"
+                />
+              </button>
+              <button class="me-5" title="Chỉnh sửa lịch trình">
+                <font-awesome-icon
+                  icon="fa-regular fa-pen-to-square"
+                  size="lg"
+                  style="color: #74c0fc"
+                />
+              </button>
+
+              <button title="Hủy lịch trình">
+                <font-awesome-icon
+                  icon="fa-regular fa-trash-can"
+                  size="lg"
+                  style="color: #d21919"
+                />
+              </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -259,6 +320,41 @@ const handleRefesh = async () => {
 
 // Form lựa chọn cách xuất file excel
 const showForm = ref(false);
+
+//Xác nhận lịch trình đã hoàn thành
+const handleCompleted = async (id_schedule) => {
+  Swal.fire({
+    title: "XÁC NHẬN",
+    text: "Bạn có chắc chắn là xác nhận lịch trình đã hoàn thành?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "XÁC NHẬN",
+    cancelButtonText: "HỦY",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.put(
+          `http://localhost:3000/api/schedules/${id_schedule}`,
+          {
+            status: 0,
+          }
+        );
+
+        if (response.status === 200) {
+          Swal.fire({
+            title: "HOÀN THÀNH",
+            text: "Đã xác nhận thành công",
+            icon: "success",
+            timer: 1500,
+          });
+          fetchschedule(1);
+        }
+      } catch (error) {
+        console.error("Error update status schedule :", error);
+      }
+    }
+  });
+};
 
 onMounted(() => {
   fetchschedule();
