@@ -48,7 +48,7 @@
 
       <div class="flex space-x-4">
         <button
-          @click="exportToExcel"
+          @click="showForm = true"
           class="px-4 py-2 bg-red-700 text-white rounded"
         >
           Xuất ra file excel
@@ -139,7 +139,54 @@
       </button>
     </div>
 
-    <!-- -------------------------------------------------------------------TẠO LỊCH TRÌNH MỚI------------------------------------------------------------>
+    <!-- -------------------------------------------------------------------FORM LỰA CHỌN XUẤT FILE------------------------------------------------------------>
+    <div
+      v-if="showForm"
+      class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-white p-4 rounded-lg shadow-lg">
+        <div class="flex justify-center text-center">
+          <span>
+            <h2 class="text-2xl font-bold mb-4">
+              LỰA CHỌN CÁCH XUẤT FILE
+            </h2></span
+          >
+          <span class="ms-3">
+            <button>
+              <font-awesome-icon
+                icon="fa-regular fa-circle-xmark"
+                style="color: #d62e2e"
+              />
+            </button>
+          </span>
+        </div>
+        <p class="text-xs font-normal italic text-center">
+          "Vui lòng chọn 1 trong 2 cách xuất file ở bên dưới"
+        </p>
+        <div class="mt-5 flex justify-center">
+          <div>
+            <router-link
+              :to="{ name: 'exportDate' }"
+              type="button"
+              class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            >
+              Theo ngày
+            </router-link>
+          </div>
+
+          <div>
+            <router-link
+              :to="{ name: 'exportMonth' }"
+              type="button"
+              class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            >
+              Theo tháng
+            </router-link>
+          </div>
+        </div>
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -194,6 +241,9 @@ const handleRefesh = () => {
     refeshed.value = true;
   }, 1000);
 };
+
+// Form lựa chọn cách xuất file excel
+const showForm = ref(false);
 
 const exportToExcel = async () => {
   Swal.fire({

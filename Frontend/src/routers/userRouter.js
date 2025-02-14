@@ -36,6 +36,21 @@ const userRouter = [
         meta: {
           title: "TOURS SYSTEM - QUẢN LÍ TOURS",
         },
+        children: [
+          {
+            path: "exportExcelDate",
+            name: "exportDate",
+            component: () =>
+              import("../pages/tourManagement/exportExcelByDate.vue"),
+          },
+
+          {
+            path: "exportExcelMonth",
+            name: "exportMonth",
+            component: () =>
+              import("../pages/tourManagement/exportExcelByMonth.vue"),
+          },
+        ],
       },
 
       // TRANG QUẢN LÍ HOA TIÊU
