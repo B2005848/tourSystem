@@ -1,6 +1,17 @@
 // controllers/userController.js
 const User = require("../models/usersModel");
 const ExcelJS = require("exceljs");
+const getAllUsers = async (req, res) => {
+  try {
+    const Users = await User.find();
+
+    res.json({
+      Users,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 // Lấy thông tin một thuyền viên theo ID
 const getUserById = async (req, res) => {
   try {
@@ -197,6 +208,7 @@ const exportUsersToExcel = async (req, res) => {
 };
 
 module.exports = {
+  getAllUsers,
   getUsers,
   createUser,
   updateUser,

@@ -48,7 +48,13 @@
 
       <div class="flex space-x-4">
         <button
-          @click="showForm = true"
+          @click="showFormCreate = true"
+          class="px-4 py-2 bg-lime-500 text-white rounded"
+        >
+          Tạo tua mới
+        </button>
+        <button
+          @click="showFormExport = true"
           class="px-4 py-2 bg-red-700 text-white rounded"
         >
           Xuất ra file excel
@@ -202,7 +208,7 @@
 
     <!-- -------------------------------------------------------------------FORM LỰA CHỌN XUẤT FILE------------------------------------------------------------>
     <div
-      v-if="showForm"
+      v-if="showFormExport"
       class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center"
     >
       <div class="bg-white p-4 rounded-lg shadow-lg">
@@ -213,7 +219,7 @@
             </h2></span
           >
           <span class="ms-3">
-            <button @click="showForm = false">
+            <button @click="showFormExport = false">
               <font-awesome-icon
                 icon="fa-regular fa-circle-xmark"
                 style="color: #d62e2e"
@@ -248,6 +254,178 @@
         <div class="mt-5">
           <router-view></router-view>
         </div>
+      </div>
+    </div>
+
+    <!-- form tạo tua mới -->
+    <div
+      v-if="showFormCreate"
+      class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold text-center mb-6">
+          Tạo Lịch Trình Mới
+        </h2>
+
+        <form @submit.prevent="handleCreate">
+          <!-- Ngày và Giờ -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="date" class="block text-sm font-medium text-gray-700"
+                >Chọn ngày khởi hành</label
+              >
+              <input
+                v-model="scheduleCreate.date"
+                type="date"
+                id="date"
+                name="date"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                required
+                @change="handleDateChangeForm"
+              />
+            </div>
+            <div class="relative">
+              <label for="time" class="block text-sm font-medium text-gray-700"
+                >Chọn giờ khởi hành</label
+              >
+              <div
+                class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                v-model="scheduleCreate.time"
+                type="time"
+                id="time"
+                class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                min="09:00"
+                max="18:00"
+                value="00:00"
+                @change="handleTimeChange"
+              />
+            </div>
+          </div>
+
+          <!-- ID Ship và ID User -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label
+                for="idUser"
+                class="block text-sm font-medium text-gray-700"
+                >Chọn Hoa Tiêu</label
+              >
+              <select
+                @click="getallusers"
+                v-model="scheduleCreate.idUser"
+                class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                required
+              >
+                <option value="" disabled>Chọn một hoa tiêu</option>
+                <option v-for="user in users" :key="user._id" :value="user._id">
+                  {{ user.id }} - {{ user.name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="idShip"
+                class="block text-sm font-medium text-gray-700"
+                >CHỌN TÀU</label
+              >
+              <select
+                @click="getallships"
+                v-model="scheduleCreate.idShip"
+                class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                required
+              >
+                <option value="" disabled>Chọn một tàu</option>
+                <option v-for="ship in ships" :key="ship._id" :value="ship._id">
+                  {{ ship.name }} - {{ ship.nation }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Từ và Đến -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="from" class="block text-sm font-medium text-gray-700"
+                >ĐIỂM ĐI</label
+              >
+              <select
+                @click="getallport"
+                v-model="scheduleCreate.from"
+                class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                required
+              >
+                <option value="" disabled>Chọn điểm xuất phát</option>
+                <option v-for="port in ports" :key="port._id" :value="port.id">
+                  {{ port.id }} - {{ port.name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label for="to" class="block text-sm font-medium text-gray-700"
+                >ĐIỂM ĐẾN</label
+              >
+              <select
+                @click="getallport"
+                v-model="scheduleCreate.to"
+                class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                required
+              >
+                <option value="" disabled>Chọn điểm xuất phát</option>
+                <option v-for="port in ports" :key="port._id" :value="port.id">
+                  {{ port.id }} - {{ port.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Ghi Chú -->
+          <div class="mb-4">
+            <label
+              for="comments"
+              class="block text-sm font-medium text-gray-700"
+              >Ghi Chú</label
+            >
+            <textarea
+              v-model="scheduleCreate.comments"
+              id="comments"
+              name="comments"
+              rows="4"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Nhập ghi chú (nếu có)"
+            ></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Tạo Lịch Trình
+          </button>
+
+          <button
+            @click="showFormCreate = false"
+            class="mt-5 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500-500 focus:ring-offset-2"
+          >
+            Hủy
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -319,8 +497,7 @@ const handleRefesh = async () => {
 };
 
 // Form lựa chọn cách xuất file excel
-const showForm = ref(false);
-
+const showFormExport = ref(false);
 //Xác nhận lịch trình đã hoàn thành
 const handleCompleted = async (id_schedule) => {
   Swal.fire({
@@ -341,6 +518,94 @@ const handleCompleted = async (id_schedule) => {
         );
 
         if (response.status === 200) {
+          Swal.fire({
+            title: "HOÀN THÀNH",
+            text: "Đã xác nhận thành công",
+            icon: "success",
+            timer: 1500,
+          });
+          fetchschedule(1);
+        }
+      } catch (error) {
+        console.error("Error update status schedule :", error);
+      }
+    }
+  });
+};
+
+// Form lựa chọn cách xuất file excel
+const showFormCreate = ref(false);
+const ships = ref([]);
+
+const handleTimeChange = (event) => {
+  console.log("Giờ đã chọn:", event.target.value); // In ra giờ 24h (HH:mm)
+};
+const handleDateChangeForm = (event) => {
+  console.log("Giờ đã chọn:", event.target.value); // In ra giờ 24h (HH:mm)
+};
+const getallships = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/api/ships/getall");
+    if (response.status === 200) {
+      ships.value = response.data.ships;
+    }
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách tàu:", error);
+  }
+};
+
+const users = ref([]);
+const getallusers = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/users/getallusers"
+    );
+    if (response.status === 200) {
+      users.value = response.data.Users;
+    }
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách hoa tiêu:", error);
+  }
+};
+
+const ports = ref([]);
+const getallport = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/api/depotships");
+    if (response.status === 200) {
+      ports.value = response.data.depotShips;
+    }
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách cầu bến:", error);
+  }
+};
+// Dữ liệu lịch trình
+const scheduleCreate = ref({
+  idUser: "",
+  idShip: "",
+  date: "",
+  to: "",
+  from: "",
+  time: "",
+  comments: "",
+});
+const handleCreate = async (id_schedule) => {
+  Swal.fire({
+    title: "THÊM LỊCH MỚI",
+    text: "Bạn có chắc chắn muốn thêm lịch trình này không?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "OK",
+    cancelButtonText: "HỦY",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/schedules",
+          scheduleCreate.value
+        );
+
+        if (response.status === 201) {
           Swal.fire({
             title: "HOÀN THÀNH",
             text: "Đã xác nhận thành công",

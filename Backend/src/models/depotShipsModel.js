@@ -9,7 +9,6 @@ const depotShipsSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
     unique: true,
     set: (v) => v.toUpperCase(),
   },

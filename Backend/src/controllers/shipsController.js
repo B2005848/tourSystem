@@ -1,6 +1,19 @@
 const Ships = require("../models/shipsModel");
 const ExcelJS = require("exceljs");
 const formatDate = require("../helper/format-datetime");
+
+//Lấy tất cả danh sách tàu
+const getAllShips = async (req, res) => {
+  try {
+    const ships = await Ships.find();
+
+    res.json({
+      ships,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 // Lấy danh sách tàu
 const getShips = async (req, res) => {
   try {
@@ -172,6 +185,7 @@ const exportShips = async (req, res) => {
   }
 };
 module.exports = {
+  getAllShips,
   getShips,
   createShip,
   updateShip,

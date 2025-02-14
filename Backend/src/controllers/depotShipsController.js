@@ -4,7 +4,7 @@ const DepotShips = require("../models/depotShipsModel");
 const getDepotShips = async (req, res) => {
   try {
     const depotShips = await DepotShips.find();
-    res.json(depotShips);
+    res.json({ depotShips });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -13,7 +13,7 @@ const getDepotShips = async (req, res) => {
 // Create a new depot ship
 const createDepotShip = async (req, res) => {
   try {
-    const { id, name } = req.body;
+    const { id, name = "" } = req.body;
 
     // Check if depot ship with the same ID or name already exists
     const existingDepotShip = await DepotShips.findOne({
