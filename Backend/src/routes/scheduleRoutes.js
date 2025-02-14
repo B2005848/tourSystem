@@ -5,6 +5,8 @@ const {
   updateSchedule,
   deleteSchedule,
   countSchedulesByMonth,
+  exportSchedulesByDate,
+  exportSchedulesByMonth,
 } = require("../controllers/scheduleController");
 const router = express.Router();
 
@@ -15,4 +17,9 @@ router.route("/").post(createSchedule);
 router.route("/:id").put(updateSchedule).delete(deleteSchedule);
 
 router.route("/count/month/:year/:month").get(countSchedulesByMonth);
+
+router.get("/exportbydate/:year/:month/:day", exportSchedulesByDate);
+
+router.get("/exportbymonth/:year/:month", exportSchedulesByMonth);
+
 module.exports = router;

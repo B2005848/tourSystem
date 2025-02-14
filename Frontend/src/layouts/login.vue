@@ -29,7 +29,7 @@
                 required
               />
             </div>
-            <div>
+            <div class="box-input">
               <label
                 for="password"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -37,12 +37,17 @@
               >
               <input
                 v-model="password"
-                type="password"
+                :type="passwordType"
                 name="password"
                 id="password"
-                placeholder="••••••••"
+                placeholder="Nhập mật khẩu của bạn"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+              />
+              <font-awesome-icon
+                :icon="iconPasswd"
+                @click="showPass"
+                id="show-pass"
               />
             </div>
             <div class="flex items-center justify-between">
@@ -83,7 +88,17 @@ import Swal from "sweetalert2"; // Correct import statement
 
 const username = ref("");
 const password = ref("");
-
+const passwordType = ref("password");
+const iconPasswd = ref("fa-eye");
+const showPass = () => {
+  if (passwordType.value === "password") {
+    passwordType.value = "text";
+    iconPasswd.value = ["fa", "fa-eye-slash"];
+  } else {
+    passwordType.value = "password";
+    iconPasswd.value = ["fa", "fa-eye"];
+  }
+};
 const handleLogin = async () => {
   const loginData = {
     username: username.value,
@@ -99,7 +114,13 @@ const handleLogin = async () => {
 
     if (response.status === 200) {
       localStorage.setItem("token", response.data.accessToken);
-      router.push({ name: "homepage" });
+      router.push({ name: "dashboard" });
+      Swal.fire({
+        icon: "success",
+        title: "Đăng nhập thành công",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   } catch (error) {
     console.error(error);
@@ -111,3 +132,16 @@ const handleLogin = async () => {
   }
 };
 </script>
+
+<style scoped>
+#show-pass {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+
+  cursor: pointer;
+}
+.box-input {
+  position: relative;
+}
+</style>

@@ -30,14 +30,23 @@
         </span>
       </div>
 
+      <!-- LỌC THEO NGÀY THÁNG NĂM -->
       <div class="flex space-x-4">
+        <input
+          type="date"
+          v-model="date"
+          @change="handleDateChange"
+          class="px-4 py-2 border border-gray-200 rounded"
+        />
         <button
-          @click="showCreateForm = true"
-          class="px-4 py-2 bg-lime-500 text-white rounded"
+          @click="fetchschedule(1)"
+          class="px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Thêm mới
+          Lọc
         </button>
+      </div>
 
+      <div class="flex space-x-4">
         <button
           @click="exportToExcel"
           class="px-4 py-2 bg-red-700 text-white rounded"
@@ -53,17 +62,17 @@
         class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
-          <th class="py-2 px-4 border-b">STT</th>
-          <th class="py-2 px-4 border-b">MÃ HOA TIÊU</th>
-          <th class="py-2 px-4 border-b">NGÀY ĐI</th>
-          <th class="py-2 px-4 border-b">GIỜ ĐI</th>
-          <th class="py-2 px-4 border-b">TÀU ĐI</th>
-          <th class="py-2 px-4 border-b">ĐIỂM XUẤT PHÁT</th>
-          <th class="py-2 px-4 border-b">ĐIỂM ĐẾN</th>
-          <th class="py-2 px-4 border-b">CẬP NHẬT LẦN CUỐI</th>
-          <th class="py-2 px-4 border-b">VỊ TRÍ HIỆN TẠI</th>
-          <th class="py-2 px-4 border-b">TRẠNG THÁI</th>
-          <th class="py-2 px-4 border-b">NGÀY KẾ TIẾP</th>
+          <th class="py-2 px-4 border-b text-center">STT</th>
+          <th class="py-2 px-4 border-b text-center">MÃ HOA TIÊU</th>
+          <th class="py-2 px-4 border-b text-center">TÀU ĐI</th>
+          <th class="py-2 px-4 border-b text-center">NGÀY ĐI</th>
+          <th class="py-2 px-4 border-b text-center">GIỜ ĐI</th>
+          <th class="py-2 px-4 border-b text-center">ĐIỂM XUẤT PHÁT</th>
+          <th class="py-2 px-4 border-b text-center">ĐIỂM ĐẾN</th>
+          <th class="py-2 px-4 border-b text-center">GHI CHÚ</th>
+          <th class="py-2 px-4 border-b text-center">CẬP NHẬT LẦN CUỐI</th>
+          <th class="py-2 px-4 border-b text-center">TRẠNG THÁI</th>
+          <th class="py-2 px-4 border-b text-center">THÊM LỊCH TRÌNH</th>
         </tr>
       </thead>
       <tbody>
@@ -78,21 +87,36 @@
           >
             {{ (currentPage - 1) * 10 + index + 1 }}
           </th>
-          <td class="px-6 py-4">{{ schedule.idUser }}</td>
-          <td class="px-6 py-4">{{ schedule.idShip.name }}</td>
-          <td class="px-6 py-4">{{ schedule.to }}</td>
-          <td class="px-6 py-4">{{ schedule.from }}</td>
-          <td class="px-6 py-4">{{ schedule.time }}</td>
-          <td class="px-6 py-4">{{ schedule.comments }}</td>
-          <!-- CÔNG CỤ -->
-          <td class="px-6 py-4">
-            <select class="px-2 py-1 border border-gray-300 rounded">
-              <option>Chọn hành động</option>
-              <option value="edit">Sửa thông tin</option>
-              <option value="view">Cập nhật vị trí tàu</option>
-              <option value="delete" class="text-red-600">Xóa</option>
-            </select>
+          <td class="px-6 py-4 text-center">
+            {{ schedule.idUser.id + "(" + schedule.idUser.name + ")" }}
           </td>
+          <td class="px-6 py-4 text-center">{{ schedule.idShip.name }}</td>
+          <td class="px-6 py-4 text-center">
+            {{ formatDate.formatDate(schedule.date) }}
+          </td>
+          <td class="px-6 py-4 text-center">{{ schedule.time }}</td>
+          <td class="px-6 py-4 text-center">{{ schedule.from }}</td>
+          <td class="px-6 py-4 text-center">{{ schedule.to }}</td>
+          <td class="px-6 py-4 text-center">{{ schedule.comments }}</td>
+          <td class="px-6 py-4 text-center">
+            {{ formatDate.formatDateTime(schedule.updated_at) }}
+          </td>
+          <td class="px-6 py-4 text-center">
+            <span
+              v-if="schedule.status === '1'"
+              class="px-2 py-1 bg-green-200 text-green-800 rounded text-center"
+            >
+              Chuẩn bị
+            </span>
+            <span
+              v-else
+              class="px-2 py-1 bg-blue-300 text-blue-800 rounded text-center"
+            >
+              Đã hoàn thành
+            </span>
+          </td>
+          <!-- CÔNG CỤ -->
+          <td class="px-6 py-4 text-center">TẠO</td>
         </tr>
       </tbody>
     </table>
@@ -128,15 +152,16 @@ import formatDate from "@/helper/format-datetime";
 const schedules = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
-const date = new Date();
+const handleDateChange = () => {
+  fetchschedule(1); // Reset về trang đầu tiên khi lọc theo ngày
+};
+
+const date = ref(new Date().toISOString().split("T")[0]); // Định dạng YYYY-MM-DD
 const fetchschedule = async (page = 1) => {
   try {
+    const selectedDate = formatDate.formateDateSort(date.value);
     const response = await axios.get(
-      `http://localhost:3000/api/schedules/getbydate/${date.getFullYear()}/${(
-        date.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, "0")}/${date.getDate().toString().padStart(2, "0")}`,
+      `http://localhost:3000/api/schedules/getbydate/${selectedDate}`,
       {
         params: { page, limit: 10 },
       }
