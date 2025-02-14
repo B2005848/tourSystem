@@ -62,6 +62,14 @@ const userRouter = [
           title: "TOURS SYSTEM - QUẢN LÍ HOA TIÊU",
         },
       },
+      {
+        path: "detailuser/:id",
+        name: "detail.user",
+        component: () => import("../pages/membershipManagement/detail.vue"),
+        meta: {
+          title: "TOURS SYSTEM - THÔNG TIN HOA TIÊU",
+        },
+      },
 
       // TRANG QUẢN LÍ TÀU THUYỀN
       {

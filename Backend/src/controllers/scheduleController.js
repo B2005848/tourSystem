@@ -145,11 +145,12 @@ const deleteSchedule = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-// Count total schedules for each user in a specific month
+
 const countSchedulesByMonth = async (req, res) => {
   try {
-    const { year, month } = req.params; // Year and month from URL
+    const { year, month } = req.params;
 
+    // Lọc danh sách lịch trình theo tháng
     const schedules = await Schedule.aggregate([
       {
         $match: {
@@ -161,11 +162,32 @@ const countSchedulesByMonth = async (req, res) => {
       },
       {
         $group: {
-          _id: { idUser: "$idUser" },
-          count: { $sum: 1 },
+          _id: { idUser: "$idUser" }, // Nhóm theo idUser
+          count: { $sum: 1 }, // Đếm số lượng lịch trình
         },
       },
-      { $sort: { count: 1 } }, //sắp xếp theo thứ tự tăng dần
+      {
+        $lookup: {
+          from: "users", // Tên của collection "Users"
+          localField: "_id.idUser", // Trường muốn so sánh với "Users"
+          foreignField: "_id", // Trường trong "Users"
+          as: "userInfo", // Lưu thông tin người dùng vào mảng userInfo
+        },
+      },
+      {
+        $unwind: "$userInfo", // Tách mảng userInfo thành đối tượng
+      },
+      {
+        $project: {
+          idUser: "$_id.idUser", // Trả về idUser
+          userId: "$userInfo.id", // Trả về id của người dùng từ User model
+          name: "$userInfo.name", // Trả về tên người dùng
+          count: 1, // Trả về số lượng lịch trình
+        },
+      },
+      {
+        $sort: { count: 1 }, // Sắp xếp theo count tăng dần
+      },
     ]);
 
     res.json(schedules);

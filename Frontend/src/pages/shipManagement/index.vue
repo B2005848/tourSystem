@@ -134,9 +134,9 @@
           <td class="py-2 px-4 border-b text-center">
             <select class="px-2 py-1 border border-gray-300 rounded">
               <option>Chọn hành động</option>
-              <option value="edit">Sửa thông tin</option>
-              <option value="view">Cập nhật vị trí tàu</option>
-              <option value="delete" class="text-red-600">Xóa</option>
+              <option>Sửa thông tin</option>
+              <option>Cập nhật vị trí tàu</option>
+              <option class="text-red-600">Xóa</option>
             </select>
           </td>
         </tr>

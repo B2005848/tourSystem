@@ -1,6 +1,23 @@
 // controllers/userController.js
 const User = require("../models/usersModel");
 const ExcelJS = require("exceljs");
+// Lấy thông tin một thuyền viên theo ID
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params; // Lấy ID từ URL
+
+    // Tìm user theo ID
+    const user = await User.findOne({ id });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 // Lấy danh sách thuyền viên với phân trang
 const getUsers = async (req, res) => {
@@ -186,4 +203,5 @@ module.exports = {
   deleteUser,
   searchUser,
   exportUsersToExcel,
+  getUserById,
 };

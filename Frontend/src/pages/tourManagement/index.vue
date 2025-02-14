@@ -5,7 +5,7 @@
   >
     <div class="flex justify-between items-center mb-4">
       <div class="flex">
-        <h1 class="text-2xl font-bold mb-4">THEO DÕI LỊCH TRÌNH</h1>
+        <h1 class="text-2xl font-bold mb-4">LỊCH TRÌNH HÔM NAY</h1>
         <span flex justify-between items-center>
           <button
             title="Làm mới"
@@ -103,7 +103,7 @@
           </td>
           <td class="px-6 py-4 text-center">
             <span
-              v-if="schedule.status === '1'"
+              v-if="schedule.status === 1"
               class="px-2 py-1 bg-green-200 text-green-800 rounded text-center"
             >
               Chuẩn bị
@@ -236,9 +236,22 @@ const nextPage = () => {
   }
 };
 const refeshed = ref(true);
-const handleRefesh = () => {
+const handleRefesh = async () => {
   refeshed.value = false;
-  fetchschedule();
+  const dateref = ref(new Date().toISOString().split("T")[0]); // Định dạng YYYY-MM-DD
+
+  const selectedDateref = formatDate.formateDateSort(dateref.value);
+  const response = await axios.get(
+    `http://localhost:3000/api/schedules/getbydate/${selectedDateref}`,
+    {
+      params: { page: 1, limit: 10 },
+    }
+  );
+
+  schedules.value = response.data.schedules;
+  currentPage.value = response.data.page;
+  totalPages.value = response.data.totalPages;
+
   setTimeout(() => {
     refeshed.value = true;
   }, 1000);

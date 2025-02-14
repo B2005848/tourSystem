@@ -75,7 +75,7 @@
           <th scope="col" class="px-6 py-3 text-center">SỐ ĐIỆN THOẠI</th>
           <th scope="col" class="px-6 py-3 text-center">TRẠNG THÁI</th>
           <th scope="col" class="px-6 py-3 text-center">VỊ TRÍ HIỆN TẠI</th>
-          <th scope="col" class="px-6 py-3 text-center">CÔNG CỤ</th>
+          <th scope="col" class="px-6 py-3 text-center">CHI TIẾT</th>
         </tr>
       </thead>
       <tbody>
@@ -140,12 +140,12 @@
           </td>
           <!-- CÔNG CỤ -->
           <td class="py-2 px-4 border-b text-center">
-            <select class="px-2 py-1 border border-gray-300 rounded">
-              <option value="">Chọn hành động</option>
-              <option value="edit">Sửa thông tin</option>
-              <option value="register">Đăng kí lịch trình</option>
-              <option value="delete">Xóa</option>
-            </select>
+            <router-link
+              :to="{ name: 'detail.user', params: { id: user.id } }"
+              class="text-blue-500 underline"
+            >
+              Xem
+            </router-link>
           </td>
         </tr>
       </tbody>
@@ -327,7 +327,7 @@ const hanldeCreate = async () => {
     console.error("Error creating user:", error);
     Swal.fire(
       "Error",
-      "Có lỗi trong quá trình thêm hoa tiêu mới, liên hệ quản trị viên để được xử lí",
+      "Mã hoa tiêu đã tồn tại, vui lòng sử dụng mã khác",
       "error"
     );
   }
