@@ -183,6 +183,7 @@ const countSchedulesByMonth = async (req, res) => {
     const schedules = await Schedule.aggregate([
       {
         $match: {
+          status: 0,
           date: {
             $gte: new Date(`${year}-${month}-01`),
             $lt: new Date(`${year}-${Number(month) + 1}-01`),

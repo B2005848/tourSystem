@@ -4,8 +4,9 @@
   >
     <div class="relative overflow-x-auto">
       <h1 class="text-2xl font-bold mb-4">THỐNG KÊ SỐ LƯỢT ĐI TRONG THÁNG</h1>
+
       <!-- LỌC THEO THÁNG NĂM -->
-      <div class="flex space-x-4">
+      <div class="flex space-x-4 mb-4">
         <label for="date">Vui lòng chọn tháng muốn lọc:</label>
         <select
           v-model="month"
@@ -14,7 +15,7 @@
         >
           <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
         </select>
-        /
+
         <select
           v-model="year"
           name="year"
@@ -24,12 +25,14 @@
         </select>
 
         <button
-          @click="fetchschedule(1)"
+          @click="fetchSchedule()"
           class="px-4 py-2 bg-blue-500 text-white rounded"
         >
           Lọc
         </button>
       </div>
+
+      <!-- BẢNG DỮ LIỆU -->
       <table
         class="text-center w-full text-sm rtl:text-right text-gray-500 dark:text-gray-400"
       >
@@ -77,33 +80,37 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const users = ref([]);
-
-const fetchUsers = async () => {
-  try {
-    const response = await axios.get(
-      "http://localhost:3000/api/schedules/count/month/2025/05"
-    );
-    users.value = response.data;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-  }
-};
-
-const viewScheduleDetails = (idUser) => {
-  // Implement the logic to view schedule details for the user
-  console.log(`View schedule details for user: ${idUser}`);
-};
 const month = ref(new Date().getMonth() + 1);
 const year = ref(new Date().getFullYear());
 const years = ref([]);
 
+// Khởi tạo danh sách năm
 onMounted(() => {
   const currentYear = new Date().getFullYear();
   for (let i = currentYear; i >= currentYear - 10; i--) {
     years.value.push(i);
   }
 });
+
+// Hàm lấy dữ liệu lịch trình theo tháng & năm được chọn
+const fetchSchedule = async () => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/api/schedules/count/month/${year.value}/${month.value}`
+    );
+    users.value = response.data;
+  } catch (error) {
+    console.error("Lỗi khi tải dữ liệu:", error);
+  }
+};
+
+// Xem chi tiết lịch trình của user
+const viewScheduleDetails = (idUser) => {
+  console.log(`Xem chi tiết lịch trình cho user: ${idUser}`);
+};
+
+// Gọi API ngay khi component được mount
 onMounted(() => {
-  fetchUsers();
+  fetchSchedule();
 });
 </script>
