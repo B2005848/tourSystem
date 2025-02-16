@@ -6,16 +6,8 @@
       <div class="flex">
         <h1 class="text-2xl font-bold mb-4">DANH SÁCH TÀU/THUYỀN</h1>
         <span flex justify-between items-center>
-          <button
-            title="Làm mới"
-            @click="handleRefesh"
-            v-if="refeshed"
-            class="ml-2"
-          >
-            <font-awesome-icon
-              icon="fa-solid fa-arrows-rotate"
-              style="color: #74c0fc"
-            />
+          <button title="Làm mới" @click="handleRefesh" v-if="refeshed" class="ml-2">
+            <font-awesome-icon icon="fa-solid fa-arrows-rotate" style="color: #74c0fc" />
             Làm mới
           </button>
 
@@ -38,10 +30,7 @@
           class="px-4 py-2 border border-gray-200 rounded"
           placeholder="Nhập thông tin tàu cần tìm..."
         />
-        <button
-          @click="search"
-          class="px-4 py-2 bg-blue-500 text-white rounded ml-2"
-        >
+        <button @click="search" class="px-4 py-2 bg-blue-500 text-white rounded ml-2">
           Tìm kiếm
         </button>
       </div>
@@ -53,10 +42,7 @@
           Thêm mới
         </button>
 
-        <button
-          @click="exportToExcel"
-          class="px-4 py-2 bg-red-700 text-white rounded"
-        >
+        <button @click="exportToExcel" class="px-4 py-2 bg-red-700 text-white rounded">
           Xuất ra file excel
         </button>
       </div>
@@ -75,8 +61,8 @@
           <th scope="col" class="px-6 py-3 text-center">MỚN NƯỚC</th>
           <th scope="col" class="px-6 py-3 text-center">GT</th>
           <th scope="col" class="px-6 py-3 text-center">ĐẠI LÝ</th>
-          <th scope="col" class="px-6 py-3 text-center">CẬP NHẬT</th>
           <th scope="col" class="px-6 py-3 text-center">VỊ TRÍ HIỆN TẠI</th>
+          <th scope="col" class="px-6 py-3 text-center">CẬP NHẬT</th>
           <th scope="col" class="px-6 py-3 text-center">CÔNG CỤ</th>
         </tr>
       </thead>
@@ -133,10 +119,7 @@
           <!-- CÔNG CỤ -->
           <td class="py-2 px-4 border-b text-center">
             <div class="flex justify-center">
-              <button
-                @click="handleDelete(ship._id)"
-                class="text-red-600 underline"
-              >
+              <button @click="handleDelete(ship._id)" class="text-red-600 underline">
                 Xóa
               </button>
             </div>
@@ -171,10 +154,7 @@
         <h2 class="text-2xl font-bold mb-4">THÊM TÀU MỚI</h2>
         <form class="w-96" @submit.prevent="hanldeCreate">
           <div class="mb-4">
-            <label
-              for="name"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
+            <label for="name" class="block text-sm font-medium text-gray-700 mt-4">
               TÊN TÀU<sup class="text-red-500">*</sup>
             </label>
             <input
@@ -185,10 +165,7 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
-            <label
-              for="nation"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
+            <label for="nation" class="block text-sm font-medium text-gray-700 mt-4">
               QUỐC TỊCH
             </label>
             <input
@@ -199,10 +176,7 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
-            <label
-              for="length"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
+            <label for="length" class="block text-sm font-medium text-gray-700 mt-4">
               CHIỀU DÀI
             </label>
             <input
@@ -213,10 +187,7 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
-            <label
-              for="draft"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
+            <label for="draft" class="block text-sm font-medium text-gray-700 mt-4">
               MỚN NƯỚC
             </label>
             <input
@@ -227,10 +198,7 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
-            <label
-              for="gt"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
+            <label for="gt" class="block text-sm font-medium text-gray-700 mt-4">
               GT
             </label>
             <input
@@ -241,10 +209,7 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
 
-            <label
-              for="owner"
-              class="block text-sm font-medium text-gray-700 mt-4"
-            >
+            <label for="owner" class="block text-sm font-medium text-gray-700 mt-4">
               ĐẠI LÝ
             </label>
             <input
@@ -256,10 +221,7 @@
             />
 
             <div class="mt-4">
-              <button
-                type="submit"
-                class="px-4 py-2 bg-blue-500 text-white rounded"
-              >
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">
                 Tạo mới
               </button>
               <button
@@ -337,10 +299,7 @@ const hanldeCreate = async () => {
       Swal.fire("Error", "Tên tàu không được để trống", "error");
       return;
     }
-    const response = await axios.post(
-      "http://localhost:3000/api/ships",
-      shipForm.value
-    );
+    const response = await axios.post("http://localhost:3000/api/ships", shipForm.value);
     if (response.status === 201) {
       Swal.fire("Thành công", "Thêm tàu mới thành công", "success");
     }
@@ -383,12 +342,9 @@ const exportToExcel = async () => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/ships/export",
-          {
-            responseType: "blob",
-          }
-        );
+        const response = await axios.get("http://localhost:3000/api/ships/export", {
+          responseType: "blob",
+        });
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
@@ -413,9 +369,7 @@ const handleDelete = async (idShip) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(
-          `http://localhost:3000/api/ships/${idShip}`
-        );
+        const response = await axios.delete(`http://localhost:3000/api/ships/${idShip}`);
         if (response.status === 200) {
           Swal.fire({
             title: "THÀNH CÔNG",

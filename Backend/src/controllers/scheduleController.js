@@ -1,6 +1,7 @@
 const Schedule = require("../models/scheduleModel");
+const User = require("../models/usersModel");
+const Ship = require("../models/shipsModel");
 const ExcelJS = require("exceljs");
-const formatDate = require("../helper/format-datetime");
 // Get schedules by date with pagination
 const getSchedulesByDate = async (req, res) => {
   try {
@@ -104,12 +105,18 @@ const updateSchedule = async (req, res) => {
     const { id } = req.params; // ID from URL
     const { idUser, idShip, date, to, from, time, status, comments } = req.body;
 
+    // Kiểm tra nếu không có idUser
+    if (!idUser) {
+      return res.status(400).json({ message: "idUser is required" });
+    }
+
+    // Tìm lịch trình theo ID
     const schedule = await Schedule.findById(id);
     if (!schedule) {
       return res.status(404).json({ message: "Schedule not found" });
     }
 
-    // Update data
+    // Cập nhật dữ liệu trong Schedule
     schedule.idUser = idUser !== undefined ? idUser : schedule.idUser;
     schedule.idShip = idShip !== undefined ? idShip : schedule.idShip;
     schedule.date = date !== undefined ? date : schedule.date;
@@ -120,8 +127,30 @@ const updateSchedule = async (req, res) => {
     schedule.comments = comments !== undefined ? comments : schedule.comments;
     schedule.updatedAt = Date.now();
 
-    // Save changes
+    // Tìm User theo ID
+    const user = await User.findById(idUser);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Cập nhật trường "visitting" của User
+    user.visitting = to !== undefined ? to : schedule.to;
+
+    const ship = await Ship.findById(idShip);
+    ship.visitting = to !== undefined ? to : schedule.to;
+    // Lưu User
+    try {
+      await user.save();
+      await ship.save();
+    } catch (saveError) {
+      return res
+        .status(500)
+        .json({ message: "Failed to update user", error: saveError.message });
+    }
+
+    // Lưu Schedule
     await schedule.save();
+
     res.json(schedule);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

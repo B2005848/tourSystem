@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true, set: (v) => v.toUpperCase() },
   birthday: { type: String },
   phone: { type: String },
-  visitting: { type: String },
+  visitting: { type: String, set: (v) => v.toUpperCase() },
   status: { type: Number, default: 1 },
 });
 

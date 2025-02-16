@@ -7,16 +7,8 @@
       <div class="flex">
         <h1 class="text-2xl font-bold mb-4">LỊCH TRÌNH HÔM NAY</h1>
         <span flex justify-between items-center>
-          <button
-            title="Làm mới"
-            @click="handleRefesh"
-            v-if="refeshed"
-            class="ml-2"
-          >
-            <font-awesome-icon
-              icon="fa-solid fa-arrows-rotate"
-              style="color: #74c0fc"
-            />
+          <button title="Làm mới" @click="handleRefesh" v-if="refeshed" class="ml-2">
+            <font-awesome-icon icon="fa-solid fa-arrows-rotate" style="color: #74c0fc" />
             Làm mới
           </button>
 
@@ -71,15 +63,6 @@
             style="color: #63e6be"
           />
           : Xác nhận lịch trình đã hoàn thành
-        </li>
-
-        <li>
-          <font-awesome-icon
-            icon="fa-regular fa-pen-to-square"
-            size="lg"
-            style="color: #74c0fc"
-          />
-          : Cập nhật lịch trình khi có sai sót
         </li>
 
         <li>
@@ -146,10 +129,7 @@
             >
               Chuẩn bị
             </span>
-            <span
-              v-else
-              class="px-2 py-1 bg-blue-300 text-blue-800 rounded text-center"
-            >
+            <span v-else class="px-2 py-1 bg-blue-300 text-blue-800 rounded text-center">
               Đã hoàn thành
             </span>
           </td>
@@ -157,7 +137,9 @@
           <td class="px-6 py-4 text-center">
             <div class="flex justify-between">
               <button
-                @click="handleCompleted(schedule._id)"
+                @click="
+                  handleCompleted(schedule._id, schedule.idUser._id, schedule.idShip._id)
+                "
                 class="me-5"
                 title="Xác nhận hoàn thành"
               >
@@ -167,15 +149,8 @@
                   style="color: #63e6be"
                 />
               </button>
-              <button class="me-5" title="Chỉnh sửa lịch trình">
-                <font-awesome-icon
-                  icon="fa-regular fa-pen-to-square"
-                  size="lg"
-                  style="color: #74c0fc"
-                />
-              </button>
 
-              <button title="Hủy lịch trình">
+              <button @click="handleDelete(schedule._id)" title="Hủy lịch trình">
                 <font-awesome-icon
                   icon="fa-regular fa-trash-can"
                   size="lg"
@@ -213,11 +188,7 @@
     >
       <div class="bg-white p-4 rounded-lg shadow-lg">
         <div class="flex justify-center text-center">
-          <span>
-            <h2 class="text-2xl font-bold mb-4">
-              LỰA CHỌN CÁCH XUẤT FILE
-            </h2></span
-          >
+          <span> <h2 class="text-2xl font-bold mb-4">LỰA CHỌN CÁCH XUẤT FILE</h2></span>
           <span class="ms-3">
             <button @click="showFormExport = false">
               <font-awesome-icon
@@ -308,7 +279,7 @@
                 type="time"
                 id="time"
                 class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                min="09:00"
+                min="06:00"
                 max="18:00"
                 value="00:00"
                 @change="handleTimeChange"
@@ -319,9 +290,7 @@
           <!-- ID Ship và ID User -->
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label
-                for="idUser"
-                class="block text-sm font-medium text-gray-700"
+              <label for="idUser" class="block text-sm font-medium text-gray-700"
                 >CHỌN HOA TIÊU
                 <font-awesome-icon
                   icon="fa-solid fa-person-military-pointing"
@@ -341,9 +310,7 @@
               </select>
             </div>
             <div>
-              <label
-                for="idShip"
-                class="block text-sm font-medium text-gray-700"
+              <label for="idShip" class="block text-sm font-medium text-gray-700"
                 >CHỌN TÀU
                 <font-awesome-icon
                   icon="fa-solid fa-ship"
@@ -410,9 +377,7 @@
 
           <!-- Ghi Chú -->
           <div class="mb-4">
-            <label
-              for="comments"
-              class="block text-sm font-medium text-gray-700"
+            <label for="comments" class="block text-sm font-medium text-gray-700"
               >Ghi Chú</label
             >
             <textarea
@@ -513,7 +478,7 @@ const handleRefesh = async () => {
 // Form lựa chọn cách xuất file excel
 const showFormExport = ref(false);
 //Xác nhận lịch trình đã hoàn thành
-const handleCompleted = async (id_schedule) => {
+const handleCompleted = async (id_schedule, idUser, idShip) => {
   Swal.fire({
     title: "XÁC NHẬN",
     text: "Bạn có chắc chắn là xác nhận lịch trình đã hoàn thành?",
@@ -527,6 +492,8 @@ const handleCompleted = async (id_schedule) => {
         const response = await axios.put(
           `http://localhost:3000/api/schedules/${id_schedule}`,
           {
+            idUser: idUser,
+            idShip: idShip,
             status: 0,
           }
         );
@@ -571,9 +538,7 @@ const getallships = async () => {
 const users = ref([]);
 const getallusers = async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:3000/api/users/getallusers"
-    );
+    const response = await axios.get("http://localhost:3000/api/users/getallusers");
     if (response.status === 200) {
       users.value = response.data.Users;
     }
@@ -593,6 +558,7 @@ const getallport = async () => {
     console.error("Lỗi khi lấy danh sách cầu bến:", error);
   }
 };
+// --------------------------------------------------THÊM LỊCH TRÌNH-------------------------
 // Dữ liệu lịch trình
 const scheduleCreate = ref({
   idUser: "",
@@ -630,6 +596,38 @@ const handleCreate = async (id_schedule) => {
         }
       } catch (error) {
         console.error("Error update status schedule :", error);
+      }
+    }
+  });
+};
+
+// --------------------------------------------XÓA LỊCH TRÌNH--------------------
+const handleDelete = async (id_schedule) => {
+  Swal.fire({
+    title: "XÓA LỊCH TRÌNH",
+    text: "Bạn có chắc chắn muốn xóa lịch trình này không?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "XÓA",
+    cancelButtonText: "HỦY",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/schedules/${id_schedule}`
+        );
+
+        if (response.status === 200) {
+          Swal.fire({
+            title: "ĐÃ XÓA",
+            text: "Lịch trình đã được xóa thành công",
+            icon: "success",
+            timer: 1500,
+          });
+          fetchschedule(1);
+        }
+      } catch (error) {
+        console.error("Error deleting schedule:", error);
       }
     }
   });

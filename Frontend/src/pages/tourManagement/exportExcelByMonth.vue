@@ -1,25 +1,14 @@
 <template>
   <div class="space-x-4 top-1 border-sky-400 border-t-2 p-2">
-    <label for="date">Vui lòng chọn ngày muốn xuất file:</label>
-    <select
-      v-model="month"
-      name="month"
-      class="px-4 py-2 border border-gray-200 rounded"
-    >
+    <label for="date">Vui lòng chọn tháng muốn xuất file:</label>
+    <select v-model="month" name="month" class="px-4 py-2 border border-gray-200 rounded">
       <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
     </select>
     /
-    <select
-      v-model="year"
-      name="year"
-      class="px-4 py-2 border border-gray-200 rounded"
-    >
+    <select v-model="year" name="year" class="px-4 py-2 border border-gray-200 rounded">
       <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
     </select>
-    <button
-      @click="exportToExcel"
-      class="px-4 py-2 bg-blue-500 text-white rounded"
-    >
+    <button @click="exportToExcel" class="px-4 py-2 bg-blue-500 text-white rounded">
       Xuất
     </button>
     <p class="italic text-center mt-4 text-sm">
@@ -68,10 +57,7 @@ const exportToExcel = async () => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute(
-          "download",
-          `XẾP TUA ${month.value}/${year.value}.xlsx`
-        );
+        link.setAttribute("download", `XẾP TUA ${month.value}/${year.value}.xlsx`);
         document.body.appendChild(link);
         link.click();
       } catch (error) {

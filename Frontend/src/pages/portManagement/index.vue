@@ -4,7 +4,7 @@
   >
     <div class="flex justify-between items-center mb-4">
       <div class="flex">
-        <h1 class="text-2xl font-bold mb-4">DANH SÁCH TÀU/THUYỀN</h1>
+        <h1 class="text-2xl font-bold mb-4">DANH SÁCH CẦU BẾN</h1>
         <span flex justify-between items-center>
           <button
             title="Làm mới"
