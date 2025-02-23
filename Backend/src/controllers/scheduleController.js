@@ -75,7 +75,7 @@ const createSchedule = async (req, res) => {
       status = 1,
       comments,
     } = req.body;
-    const existingSchedule = await Schedule.findOne({ idUser, date, time });
+    const existingSchedule = await Schedule.findOne({ idUser, date });
     if (existingSchedule) {
       return res.status(400).json({
         message: "Schedule already exists for this user at the specified time",

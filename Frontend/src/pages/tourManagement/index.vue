@@ -7,8 +7,16 @@
       <div class="flex">
         <h1 class="text-2xl font-bold mb-4">LỊCH TRÌNH HÔM NAY</h1>
         <span flex justify-between items-center>
-          <button title="Làm mới" @click="handleRefesh" v-if="refeshed" class="ml-2">
-            <font-awesome-icon icon="fa-solid fa-arrows-rotate" style="color: #74c0fc" />
+          <button
+            title="Làm mới"
+            @click="handleRefesh"
+            v-if="refeshed"
+            class="ml-2"
+          >
+            <font-awesome-icon
+              icon="fa-solid fa-arrows-rotate"
+              style="color: #74c0fc"
+            />
             Làm mới
           </button>
 
@@ -129,7 +137,10 @@
             >
               Chuẩn bị
             </span>
-            <span v-else class="px-2 py-1 bg-blue-300 text-blue-800 rounded text-center">
+            <span
+              v-else
+              class="px-2 py-1 bg-blue-300 text-blue-800 rounded text-center"
+            >
               Đã hoàn thành
             </span>
           </td>
@@ -138,7 +149,11 @@
             <div class="flex justify-between">
               <button
                 @click="
-                  handleCompleted(schedule._id, schedule.idUser._id, schedule.idShip._id)
+                  handleCompleted(
+                    schedule._id,
+                    schedule.idUser._id,
+                    schedule.idShip._id
+                  )
                 "
                 class="me-5"
                 title="Xác nhận hoàn thành"
@@ -150,7 +165,10 @@
                 />
               </button>
 
-              <button @click="handleDelete(schedule._id)" title="Hủy lịch trình">
+              <button
+                @click="handleDelete(schedule._id)"
+                title="Hủy lịch trình"
+              >
                 <font-awesome-icon
                   icon="fa-regular fa-trash-can"
                   size="lg"
@@ -188,7 +206,11 @@
     >
       <div class="bg-white p-4 rounded-lg shadow-lg">
         <div class="flex justify-center text-center">
-          <span> <h2 class="text-2xl font-bold mb-4">LỰA CHỌN CÁCH XUẤT FILE</h2></span>
+          <span>
+            <h2 class="text-2xl font-bold mb-4">
+              LỰA CHỌN CÁCH XUẤT FILE
+            </h2></span
+          >
           <span class="ms-3">
             <button @click="showFormExport = false">
               <font-awesome-icon
@@ -283,6 +305,7 @@
                 max="18:00"
                 value="00:00"
                 @change="handleTimeChange"
+                required
               />
             </div>
           </div>
@@ -290,7 +313,9 @@
           <!-- ID Ship và ID User -->
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="idUser" class="block text-sm font-medium text-gray-700"
+              <label
+                for="idUser"
+                class="block text-sm font-medium text-gray-700"
                 >CHỌN HOA TIÊU
                 <font-awesome-icon
                   icon="fa-solid fa-person-military-pointing"
@@ -310,7 +335,9 @@
               </select>
             </div>
             <div>
-              <label for="idShip" class="block text-sm font-medium text-gray-700"
+              <label
+                for="idShip"
+                class="block text-sm font-medium text-gray-700"
                 >CHỌN TÀU
                 <font-awesome-icon
                   icon="fa-solid fa-ship"
@@ -377,7 +404,9 @@
 
           <!-- Ghi Chú -->
           <div class="mb-4">
-            <label for="comments" class="block text-sm font-medium text-gray-700"
+            <label
+              for="comments"
+              class="block text-sm font-medium text-gray-700"
               >Ghi Chú</label
             >
             <textarea
@@ -538,7 +567,9 @@ const getallships = async () => {
 const users = ref([]);
 const getallusers = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/users/getallusers");
+    const response = await axios.get(
+      "http://localhost:3000/api/users/getallusers"
+    );
     if (response.status === 200) {
       users.value = response.data.Users;
     }
