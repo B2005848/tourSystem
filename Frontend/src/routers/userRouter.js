@@ -99,6 +99,16 @@ const userRouter = [
           title: "TOURS SYSTEM - QUẢN LÍ CẦU BẾN",
         },
       },
+
+      // TRANG QUẢN LÍ NGHỈ PHÉP
+      {
+        path: "leave_management",
+        name: "leaves.mng",
+        component: () => import("../pages/leaveDayManagement/index.vue"),
+        meta: {
+          title: "TOURS SYSTEM - QUẢN LÍ NGÀY PHÉP",
+        },
+      },
     ],
   },
 ];
