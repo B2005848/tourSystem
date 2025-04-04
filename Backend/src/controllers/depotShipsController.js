@@ -30,7 +30,14 @@ const getDepot = async (req, res) => {
 // Create a new depot ship
 const createDepotShip = async (req, res) => {
   try {
-    const { id, name = "" } = req.body;
+    const { id, name } = req.body;
+
+    // Validate input
+    if (!id || !name || name.trim() === "") {
+      return res
+        .status(400)
+        .json({ message: "ID and name are required fields" });
+    }
 
     // Check if depot ship with the same ID or name already exists
     const existingDepotShip = await DepotShips.findOne({
