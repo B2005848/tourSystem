@@ -8,6 +8,7 @@ const shipsRoutes = require("./src/routes/shipsRoutes");
 const depotShipsRoutes = require("./src/routes/depotShipsRoutes");
 const accountManagerRoutes = require("./src/routes/accountManagerRoutes");
 const scheduleRoutes = require("./src/routes/scheduleRoutes");
+const onLeaveRoutes = require("./src/routes/onLeaveRouter");
 const { errorHandler } = require("./src/middlewares/errorMiddleware");
 
 const app = express();
@@ -28,6 +29,9 @@ app.use("/api/accounts", accountManagerRoutes);
 
 // Schedule api
 app.use("/api/schedules", scheduleRoutes);
+
+// On leave api
+app.use("/api/onleave", onLeaveRoutes);
 
 app.use(errorHandler);
 

@@ -4,7 +4,6 @@ const onLeave = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
   },
   startDate: {
     type: Date,
