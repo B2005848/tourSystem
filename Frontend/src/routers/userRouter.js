@@ -22,7 +22,7 @@ const userRouter = [
       {
         path: "dashboard",
         name: "dashboard",
-        component: () => import("../pages/dashboard/index..vue"),
+        component: () => import("../pages/dashboard/index.vue"),
         meta: {
           title: "TOURS SYSTEM - THỐNG KÊ",
         },
@@ -30,7 +30,7 @@ const userRouter = [
 
       // TRANG QUẢN LÍ TOURS
       {
-        path: "tours_today_management",
+        path: "tours-today-management",
         name: "toursnowday.mng",
         component: () => import("../pages/tourManagement/index.vue"),
         meta: {
@@ -53,8 +53,9 @@ const userRouter = [
         ],
       },
 
+      // LỊCH TRÌNH THEO THÁNG
       {
-        path: "tours_month_management",
+        path: "tours-month-management",
         name: "toursmonth.mng",
         component: () => import("../pages/tourMonth/index.vue"),
         meta: {
@@ -64,7 +65,7 @@ const userRouter = [
 
       // TRANG QUẢN LÍ HOA TIÊU
       {
-        path: "memberships_management",
+        path: "memberships-management",
         name: "members.mng",
         component: () => import("../pages/membershipManagement/index.vue"),
         meta: {
@@ -72,7 +73,7 @@ const userRouter = [
         },
       },
       {
-        path: "detailuser/:id",
+        path: "memberships-management/:id",
         name: "detail.user",
         component: () => import("../pages/membershipManagement/detail.vue"),
         meta: {
@@ -82,7 +83,7 @@ const userRouter = [
 
       // TRANG QUẢN LÍ TÀU THUYỀN
       {
-        path: "ships_management",
+        path: "ships-management",
         name: "ships.mng",
         component: () => import("../pages/shipManagement/index.vue"),
         meta: {
@@ -92,7 +93,7 @@ const userRouter = [
 
       // TRANG QUẢN LÍ CẦU BẾN
       {
-        path: "ports_management",
+        path: "ports-management",
         name: "ports.mng",
         component: () => import("../pages/portManagement/index.vue"),
         meta: {
@@ -102,11 +103,21 @@ const userRouter = [
 
       // TRANG QUẢN LÍ NGHỈ PHÉP
       {
-        path: "leave_management",
+        path: "leave-management",
         name: "leaves.mng",
         component: () => import("../pages/leaveDayManagement/index.vue"),
         meta: {
           title: "TOURS SYSTEM - QUẢN LÍ NGÀY PHÉP",
+        },
+      },
+
+      // TRANG QUẢN LÍ TOUR SÔNG TIỀN
+      {
+        path: "tour-ST-management",
+        name: "tourST.mng",
+        component: () => import("../pages/tourSTManagement/index.vue"),
+        meta: {
+          title: "TOURS SYSTEM - QUẢN LÍ TOUR SÔNG TIỀN",
         },
       },
     ],

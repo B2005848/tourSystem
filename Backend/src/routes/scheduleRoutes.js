@@ -7,6 +7,7 @@ const {
   countSchedulesByMonth,
   exportSchedulesByDate,
   exportSchedulesByMonth,
+  countToursByUserForST,
 } = require("../controllers/scheduleController");
 const router = express.Router();
 
@@ -22,4 +23,5 @@ router.get("/exportbydate/:year/:month/:day", exportSchedulesByDate);
 
 router.get("/exportbymonth/:year/:month", exportSchedulesByMonth);
 
+router.get("/tour-count", countToursByUserForST);
 module.exports = router;

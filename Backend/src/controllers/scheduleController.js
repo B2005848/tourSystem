@@ -377,6 +377,60 @@ const exportSchedulesByMonth = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+// ĐẾM TUOR SÔNG TIỀN TRONG THÁNG
+const countToursByUserForST = async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    if (!month || !year) {
+      return res
+        .status(400)
+        .json({ message: "Vui lòng cung cấp month và year" });
+    }
+
+    const startDate = new Date(`${year}-${month}-01`);
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1); // ngày đầu tháng sau
+
+    const result = await Schedule.aggregate([
+      {
+        $match: {
+          to: "ST", // Dùng mã bến "SÔNG TIỀN"
+          date: { $gte: startDate, $lt: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: "$idUser",
+          tourCount: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: "$user.id",
+          userName: "$user.name",
+          tourCount: 1,
+        },
+      },
+    ]);
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+};
 module.exports = {
   getSchedulesByDate,
   createSchedule,
@@ -385,4 +439,5 @@ module.exports = {
   countSchedulesByMonth,
   exportSchedulesByDate,
   exportSchedulesByMonth,
+  countToursByUserForST,
 };
